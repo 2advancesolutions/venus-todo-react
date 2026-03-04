@@ -1,10 +1,125 @@
-html,
-body,
-#root {
-  height: 100%;
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
   margin: 0;
-  background-color: #f5f7fa;
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.todo-app {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: #1a1a1a;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.todo-form {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.todo-input {
+  flex: 1;
+  padding: 0.75rem;
+  border: 1px solid #444;
+  border-radius: 4px;
+  background: #2a2a2a;
+  color: white;
+  font-size: 1rem;
+}
+
+.todo-input:focus {
+  outline: none;
+  border-color: #646cff;
+}
+
+.todo-button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  background: #646cff;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.todo-button:hover {
+  background: #535bf2;
+}
+
+.todo-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  background: #2a2a2a;
+  border-radius: 4px;
+  margin-bottom: 0.5rem;
+}
+
+.todo-checkbox {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.todo-text {
+  flex: 1;
+  text-align: left;
+  color: white;
+}
+
+.todo-text.completed {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+.todo-delete {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  background: #ff4444;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.todo-delete:hover {
+  background: #cc0000;
+}
+
+.empty-state {
+  color: #888;
+  font-style: italic;
 }
