@@ -1,75 +1,74 @@
-import { useMemo, useState } from 'react';
-import './App.css';
-
-const createTodo = (text) => ({
-  id: crypto.randomUUID(),
-  text,
-  completed: false,
-});
+import React, { useState } from 'react';
 
 function App() {
-  const [todos, setTodos] = useState(() => []);
-  const [input, setInput] = useState('');
-  const remainingCount = useMemo(
-    () => todos.filter((todo) => !todo.completed).length,
-    [todos]
-  );
+  const [todos, setTodos] = useState([]);
+  const [inputValue, setInputValue] = useState('');
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const trimmed = input.trim();
-    if (!trimmed) return;
-    setTodos((prev) => [createTodo(trimmed), ...prev]);
-    setInput('');
+  const addTodo = () => {
+    if (inputValue.trim() === '') return;
+    
+    const newTodo = {
+      id: Date.now(),
+      text: inputValue,
+      completed: false
+    };
+    
+    setTodos([...todos, newTodo]);
+    setInputValue('');
   };
 
-  const handleToggle = (id) => {
-    setTodos((prev) =>
-      prev.map((todo) =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo
-      )
-    );
+  const deleteTodo = (id) => {
+    setTodos(todos.filter(todo => todo.id !== id));
   };
 
-  const handleDelete = (id) => {
-    setTodos((prev) => prev.filter((todo) => todo.id !== id));
+  const toggleTodo = (id) => {
+    setTodos(todos.map(todo => 
+      todo.id === id ? { ...todo, completed: !todo.completed } : todo
+    ));
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      addTodo();
+    }
   };
 
   return (
-    <div className="app">
-      <header>
-        <h1>Todo App</h1>
-        <p>{remainingCount} task{remainingCount === 1 ? '' : 's'} remaining</p>
-      </header>
-
-      <form onSubmit={handleSubmit} className="todo-form">
+    <div className="todo-app">
+      <h1>Todo App</h1>
+      
+      <div className="todo-form">
         <input
           type="text"
-          placeholder="What needs to be done?"
-          value={input}
-          onChange={(event) => setInput(event.target.value)}
+          className="todo-input"
+          placeholder="Add a new todo..."
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          onKeyPress={handleKeyPress}
         />
-        <button type="submit">Add Todo</button>
-      </form>
+        <button className="todo-button" onClick={addTodo}>
+          Add Todo
+        </button>
+      </div>
 
       {todos.length === 0 ? (
-        <p className="empty-state">No todos yet. Add your first one!</p>
+        <p className="empty-state">No todos yet. Add one above!</p>
       ) : (
         <ul className="todo-list">
-          {todos.map((todo) => (
-            <li key={todo.id} className={todo.completed ? 'completed' : ''}>
-              <label>
-                <input
-                  type="checkbox"
-                  checked={todo.completed}
-                  onChange={() => handleToggle(todo.id)}
-                />
-                <span>{todo.text}</span>
-              </label>
+          {todos.map(todo => (
+            <li key={todo.id} className="todo-item">
+              <input
+                type="checkbox"
+                className="todo-checkbox"
+                checked={todo.completed}
+                onChange={() => toggleTodo(todo.id)}
+              />
+              <span className={`todo-text ${todo.completed ? 'completed' : ''}`}>
+                {todo.text}
+              </span>
               <button
-                className="delete-button"
-                type="button"
-                onClick={() => handleDelete(todo.id)}
+                className="todo-delete"
+                onClick={() => deleteTodo(todo.id)}
               >
                 Delete
               </button>
