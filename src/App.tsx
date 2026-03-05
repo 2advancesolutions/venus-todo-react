@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, KeyboardEvent, ChangeEvent } from 'react';
+import { Todo } from './types/todo';
+import './App.css';
 
-function App() {
-  const [todos, setTodos] = useState([]);
-  const [inputValue, setInputValue] = useState('');
+function App(): JSX.Element {
+  const [todos, setTodos] = useState<Todo[]>([]);
+  const [inputValue, setInputValue] = useState<string>('');
 
-  const addTodo = () => {
+  const addTodo = (): void => {
     if (inputValue.trim() === '') return;
     
-    const newTodo = {
+    const newTodo: Todo = {
       id: Date.now(),
       text: inputValue,
       completed: false
@@ -17,20 +19,24 @@ function App() {
     setInputValue('');
   };
 
-  const deleteTodo = (id) => {
+  const deleteTodo = (id: number): void => {
     setTodos(todos.filter(todo => todo.id !== id));
   };
 
-  const toggleTodo = (id) => {
+  const toggleTodo = (id: number): void => {
     setTodos(todos.map(todo => 
       todo.id === id ? { ...todo, completed: !todo.completed } : todo
     ));
   };
 
-  const handleKeyPress = (e) => {
+  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>): void => {
     if (e.key === 'Enter') {
       addTodo();
     }
+  };
+
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    setInputValue(e.target.value);
   };
 
   return (
@@ -43,7 +49,7 @@ function App() {
           className="todo-input"
           placeholder="Add a new todo..."
           value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
+          onChange={handleInputChange}
           onKeyPress={handleKeyPress}
         />
         <button className="todo-button" onClick={addTodo}>
