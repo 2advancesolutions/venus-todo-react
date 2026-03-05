@@ -1,4 +1,4 @@
-import React, { useState, KeyboardEvent, ChangeEvent } from 'react';
+import { useState, KeyboardEvent, ChangeEvent } from 'react';
 import { Todo } from './types/todo';
 import './App.css';
 
