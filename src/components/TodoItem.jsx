@@ -29,7 +29,8 @@ function TodoItem({ todo, onToggle, onUpdate, onDelete }) {
     }
   }
 
-  return (\n    <li className="todo-item">
+  return (
+    <li className="todo-item">
       <input
         type="checkbox"
         className="todo-checkbox"
