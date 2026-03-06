@@ -71,7 +71,11 @@ function TodoItem({
         </form>
       ) : (
         <div className="todo-item__content">
-          <div className="todo-item__text" role="button" tabIndex={0}>
+          <div
+            className="todo-item__text"
+            onDoubleClick={() => setIsEditing(true)}
+            title="Double click to edit"
+          >
             {text}
           </div>
           <div className="todo-item__actions">
