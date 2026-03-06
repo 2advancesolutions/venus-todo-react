@@ -1,0 +1,199 @@
+.page {
+  min-height: 100vh;
+  background: var(--bg-page);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px 16px 80px;
+}
+
+.container {
+  width: 100%;
+  max-width: 580px;
+}
+
+/* ─── Header ─────────────────────────────── */
+.header {
+  margin-bottom: 28px;
+}
+
+.logoRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.logoEmoji {
+  font-size: 2.4rem;
+  line-height: 1;
+  filter: drop-shadow(0 2px 8px rgba(124, 58, 237, 0.5));
+}
+
+.title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  background: var(--gradient-title);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.subtitle {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin: 2px 0 0;
+}
+
+/* ─── Add form ────────────────────────────── */
+.addForm {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.inputWrap {
+  flex: 1;
+  min-width: 220px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.inputWrap.inputError .input {
+  border-color: var(--accent-red);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+
+.inputIcon {
+  position: absolute;
+  left: 12px;
+  color: var(--text-muted);
+  pointer-events: none;
+  flex-shrink: 0;
+}
+
+.input {
+  width: 100%;
+  background: var(--bg-card);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 11px 60px 11px 38px;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2);
+}
+
+.charCount {
+  position: absolute;
+  right: 10px;
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.errorMsg {
+  flex-basis: 100%;
+  font-size: 0.78rem;
+  color: var(--accent-red-light);
+  padding-left: 4px;
+  margin-top: -6px;
+}
+
+.addBtn {
+  background: var(--gradient-btn);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 600;
+  padding: 11px 22px;
+  border-radius: var(--radius-md);
+  white-space: nowrap;
+  transition: opacity var(--transition), transform var(--transition), box-shadow var(--transition);
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35);
+}
+
+.addBtn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(124, 58, 237, 0.45);
+}
+
+.addBtn:active {
+  transform: translateY(0);
+}
+
+/* ─── Filters ─────────────────────────────── */
+.filterRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.filterBtn {
+  background: none;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 5px 12px;
+  border-radius: 99px;
+  border: 1px solid transparent;
+  transition: all var(--transition);
+}
+
+.filterBtn:hover {
+  color: var(--text-secondary);
+  border-color: var(--border);
+}
+
+.filterActive {
+  color: var(--accent-purple-light) !important;
+  border-color: var(--accent-purple) !important;
+  background: rgba(124, 58, 237, 0.12) !important;
+  font-weight: 600;
+}
+
+.countLabel {
+  margin-left: auto;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+/* ─── List ────────────────────────────────── */
+.listArea {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ─── Empty ───────────────────────────────── */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 42px 20px;
+  gap: 12px;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  border: 1.5px dashed var(--border);
+  border-radius: var(--radius-lg);
+}
+
+.emptyIcon {
+  font-size: 2.4rem;
+  filter: grayscale(0.3);
+}
