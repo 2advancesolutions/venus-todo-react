@@ -1,0 +1,226 @@
+.card {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: var(--bg-card);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 14px 14px;
+  transition: border-color var(--transition), box-shadow var(--transition),
+    opacity var(--transition), transform var(--transition), background var(--transition);
+  cursor: grab;
+}
+
+.card:hover {
+  border-color: var(--border-hover);
+  box-shadow: var(--shadow-card);
+  transform: translateY(-1px);
+}
+
+.card:active:not(.editing) {
+  transform: translateY(0);
+  cursor: grabbing;
+}
+
+.card.completed {
+  background: var(--bg-card-completed);
+  border-color: var(--border-completed);
+  opacity: 0.72;
+  cursor: default;
+}
+
+.card.dragging {
+  opacity: 0.4;
+  transform: scale(0.98) translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  border-color: var(--accent-purple);
+  cursor: grabbing;
+}
+
+/* ─── Grip ────────────────────────────────── */
+.grip {
+  display: flex;
+  align-items: center;
+  padding-top: 2px;
+  color: var(--text-muted);
+  opacity: 0.4;
+  flex-shrink: 0;
+  cursor: grab;
+  transition: opacity var(--transition);
+}
+
+.card:hover .grip {
+  opacity: 0.8;
+}
+
+/* ─── Checkmark ───────────────────────────── */
+.checkmark {
+  display: flex;
+  align-items: center;
+  padding-top: 2px;
+  flex-shrink: 0;
+  color: var(--accent-green);
+}
+
+/* ─── Priority dot ────────────────────────── */
+.priorityDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  margin-top: 6px;
+  transition: background var(--transition);
+}
+
+/* ─── Body ────────────────────────────────── */
+.body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.text {
+  font-size: 0.93rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  line-height: 1.45;
+  word-break: break-word;
+  margin: 0;
+  cursor: text;
+  transition: color var(--transition);
+}
+
+.completed .text {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.meta {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  opacity: 0.6;
+}
+
+/* ─── Edit ────────────────────────────────── */
+.editInput {
+  width: 100%;
+  background: var(--bg-page);
+  border: 1.5px solid var(--border-focus);
+  border-radius: var(--radius-sm);
+  padding: 7px 10px;
+  color: var(--text-primary);
+  font-size: 0.93rem;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+  transition: border-color var(--transition);
+}
+
+.editInput:focus {
+  outline: none;
+}
+
+.editInput.editError {
+  border-color: var(--accent-red);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+}
+
+.editErrorMsg {
+  font-size: 0.75rem;
+  color: var(--accent-red-light);
+}
+
+.editActions {
+  display: flex;
+  gap: 7px;
+  margin-top: 6px;
+}
+
+.saveBtn {
+  background: var(--gradient-btn);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 5px 14px;
+  border-radius: var(--radius-sm);
+  transition: opacity var(--transition);
+  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.3);
+}
+
+.saveBtn:hover {
+  opacity: 0.88;
+}
+
+.cancelBtn {
+  background: none;
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  padding: 5px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  transition: all var(--transition);
+}
+
+.cancelBtn:hover {
+  color: var(--text-secondary);
+  border-color: var(--border-hover);
+}
+
+/* ─── Priority select ─────────────────────── */
+.prioritySelect {
+  background: var(--bg-page);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-size: 0.73rem;
+  padding: 4px 6px;
+  cursor: pointer;
+  flex-shrink: 0;
+  align-self: center;
+  transition: border-color var(--transition), color var(--transition);
+}
+
+.prioritySelect:hover,
+.prioritySelect:focus {
+  outline: none;
+  border-color: var(--border-hover);
+  color: var(--text-secondary);
+}
+
+/* ─── Actions ─────────────────────────────── */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.iconBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-sm);
+  background: none;
+  border: 1px solid transparent;
+  transition: all var(--transition);
+  color: var(--text-muted);
+  opacity: 0;
+}
+
+.card:hover .iconBtn {
+  opacity: 1;
+}
+
+.editBtn:hover {
+  color: var(--accent-purple-light);
+  border-color: var(--accent-purple);
+  background: rgba(124, 58, 237, 0.1);
+}
+
+.deleteBtn:hover {
+  color: var(--accent-red-light);
+  border-color: var(--accent-red);
+  background: rgba(239, 68, 68, 0.1);
+}

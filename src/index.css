@@ -1,0 +1,128 @@
+/* ═══════════════════════════════════════════════════════════════
+   index.css  —  Venus Todo App  |  Global reset + design tokens
+   ═══════════════════════════════════════════════════════════════ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ─── Design tokens ───────────────────────────────────────────── */
+:root {
+  /* Backgrounds */
+  --bg-primary:          #0d0d1a;
+  --bg-secondary:        #13132b;
+  --bg-card:             #191932;
+  --bg-card-hover:       #1f1f3a;
+  --bg-card-completed:   #111126;
+
+  /* Accent palette */
+  --accent-purple:       #7c3aed;
+  --accent-purple-light: #a78bfa;
+  --accent-green:        #10b981;
+  --accent-green-light:  #34d399;
+  --accent-red:          #ef4444;
+  --accent-red-light:    #f87171;
+  --accent-amber:        #f59e0b;
+  --accent-amber-light:  #fbbf24;
+
+  /* Text */
+  --text-primary:   #f0f0ff;
+  --text-secondary: #a0a0c0;
+  --text-muted:     #5a5a80;
+
+  /* Borders */
+  --border:          #252542;
+  --border-hover:    #3a3a60;
+  --border-focus:    #7c3aed;
+  --border-completed:#1e1e3a;
+
+  /* Shadows */
+  --shadow-sm:   0 1px 4px rgba(0, 0, 0, 0.45);
+  --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.55);
+  --shadow-md:   0 6px 24px rgba(0, 0, 0, 0.6);
+  --shadow-lg:   0 12px 48px rgba(0, 0, 0, 0.7);
+
+  /* Shape */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+
+  /* Motion */
+  --transition: 0.18s ease;
+
+  /* Gradients (shared) */
+  --gradient-btn:   linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
+  --gradient-title: linear-gradient(115deg, #a78bfa 0%, #34d399 100%);
+}
+
+/* ─── Base ────────────────────────────────────────────────────── */
+html, body {
+  height: 100%;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+               Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* ─── Interactive resets ──────────────────────────────────────── */
+button {
+  cursor: pointer;
+  border: none;
+  outline: none;
+  font-family: inherit;
+  background: none;
+  color: inherit;
+}
+
+input, textarea, select {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  outline: none;
+  background: none;
+  border: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ─── Focus ring — keyboard users only ───────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--accent-purple-light);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ─── Scrollbar ───────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 99px;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* ─── Utility: visually hidden (a11y) ────────────────────────── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}

@@ -1,0 +1,345 @@
+/* ═══════════════════════════════════════════════════════════════
+   App.module.css  —  Venus Todo App
+   Clean, spacious, user-friendly layout.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── Page shell ──────────────────────────────────────────────── */
+.page {
+  min-height: 100vh;
+  background: var(--bg-primary);
+  background-image:
+    radial-gradient(ellipse 70% 45% at 15% 0%,   rgba(124, 58, 237, 0.20) 0%, transparent 65%),
+    radial-gradient(ellipse 55% 40% at 85% 105%,  rgba(16, 185, 129, 0.12) 0%, transparent 60%);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 52px 20px 120px;
+}
+
+/* ─── Main container ──────────────────────────────────────────── */
+.container {
+  width: 100%;
+  max-width: 780px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   HEADER
+   ═══════════════════════════════════════════════════════════════ */
+.header {
+  margin-bottom: 32px;
+}
+
+.logoRow {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+/* Icon badge */
+.logoEmoji {
+  width: 60px;
+  height: 60px;
+  border-radius: 18px;
+  background: linear-gradient(145deg, rgba(124, 58, 237, 0.28), rgba(16, 185, 129, 0.14));
+  border: 1.5px solid rgba(124, 58, 237, 0.38);
+  box-shadow: 0 6px 20px rgba(124, 58, 237, 0.22), inset 0 1px 0 rgba(255,255,255,0.09);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  flex-shrink: 0;
+}
+
+.title {
+  font-size: 2.1rem;
+  font-weight: 800;
+  letter-spacing: -0.6px;
+  line-height: 1.15;
+  margin: 0 0 3px;
+  background: linear-gradient(115deg, #a78bfa 0%, #34d399 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.subtitle {
+  font-size: 0.86rem;
+  color: var(--text-muted);
+  font-weight: 400;
+  margin: 0;
+  letter-spacing: 0.01em;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ADD FORM  —  card-style wrapper so it reads as one unit
+   ═══════════════════════════════════════════════════════════════ */
+.addForm {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin-bottom: 28px;
+  background: var(--bg-secondary);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 18px 20px;
+  box-shadow: var(--shadow-sm);
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+/* Glow the whole card on focus */
+.addForm:focus-within {
+  border-color: rgba(124, 58, 237, 0.50);
+  box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.10), var(--shadow-sm);
+}
+
+/* Input wrapper */
+.inputWrap {
+  flex: 1;
+  min-width: 220px;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.inputWrap.inputError .input {
+  border-color: var(--accent-red);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.18);
+}
+
+/* Leading icon inside input */
+.inputIcon {
+  position: absolute;
+  left: 13px;
+  color: var(--text-muted);
+  pointer-events: none;
+  flex-shrink: 0;
+  transition: color var(--transition);
+}
+
+.inputWrap:focus-within .inputIcon {
+  color: var(--accent-purple-light);
+}
+
+.input {
+  width: 100%;
+  background: var(--bg-card);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 13px 52px 13px 42px;
+  color: var(--text-primary);
+  font-size: 0.97rem;
+  font-weight: 400;
+  line-height: 1.4;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.input::placeholder {
+  color: var(--text-muted);
+  opacity: 0.70;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--border-focus);
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.18);
+}
+
+/* Char counter */
+.charCount {
+  position: absolute;
+  right: 12px;
+  font-size: 0.69rem;
+  color: var(--text-muted);
+  opacity: 0.50;
+  pointer-events: none;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Inline error */
+.errorMsg {
+  flex-basis: 100%;
+  font-size: 0.80rem;
+  color: var(--accent-red-light);
+  padding-left: 6px;
+  margin-top: -4px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.errorMsg::before {
+  content: '⚠';
+  font-size: 0.78rem;
+}
+
+/* Submit button */
+.addBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%);
+  color: #fff;
+  font-size: 0.93rem;
+  font-weight: 600;
+  padding: 13px 24px;
+  border-radius: var(--radius-md);
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+  box-shadow: 0 4px 16px rgba(124, 58, 237, 0.40);
+  transition: opacity var(--transition), transform var(--transition), box-shadow var(--transition);
+  align-self: flex-start;
+}
+
+.addBtn:hover {
+  opacity: 0.91;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(124, 58, 237, 0.52);
+}
+
+.addBtn:active {
+  transform: translateY(0);
+  box-shadow: 0 3px 10px rgba(124, 58, 237, 0.30);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FILTER BAR
+   ═══════════════════════════════════════════════════════════════ */
+.filterRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+
+.filterBtn {
+  background: none;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-weight: 500;
+  padding: 6px 15px;
+  border-radius: 99px;
+  border: 1px solid transparent;
+  letter-spacing: 0.01em;
+  transition: color var(--transition), background var(--transition), border-color var(--transition);
+}
+
+.filterBtn:hover {
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--border);
+}
+
+.filterActive {
+  color: #c4b5fd !important;
+  border-color: rgba(124, 58, 237, 0.55) !important;
+  background: rgba(124, 58, 237, 0.14) !important;
+  font-weight: 700;
+}
+
+/* Pill badge showing task count */
+.countLabel {
+  margin-left: auto;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  border-radius: 99px;
+  padding: 4px 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TASK LIST
+   ═══════════════════════════════════════════════════════════════ */
+.listArea {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   EMPTY STATE
+   ═══════════════════════════════════════════════════════════════ */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 56px 28px;
+  gap: 14px;
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.012);
+  color: var(--text-muted);
+  transition: border-color var(--transition), background var(--transition);
+}
+
+.emptyState:hover {
+  border-color: rgba(124, 58, 237, 0.32);
+  background: rgba(124, 58, 237, 0.03);
+}
+
+.emptyIcon {
+  font-size: 3rem;
+  line-height: 1;
+  filter: grayscale(0.15);
+}
+
+.emptyState p {
+  font-size: 0.94rem;
+  color: var(--text-muted);
+  max-width: 260px;
+  line-height: 1.65;
+  margin: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   RESPONSIVE  — mobile-first tweaks
+   ═══════════════════════════════════════════════════════════════ */
+@media (max-width: 640px) {
+  .page {
+    padding: 30px 14px 90px;
+  }
+
+  .logoEmoji {
+    width: 48px;
+    height: 48px;
+    font-size: 1.5rem;
+    border-radius: 14px;
+  }
+
+  .title {
+    font-size: 1.6rem;
+  }
+
+  .subtitle {
+    font-size: 0.82rem;
+  }
+
+  .addForm {
+    padding: 14px 14px;
+  }
+
+  .inputWrap {
+    min-width: 100%;
+  }
+
+  .addBtn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .countLabel {
+    display: none;
+  }
+
+  .filterRow {
+    gap: 4px;
+  }
+}
