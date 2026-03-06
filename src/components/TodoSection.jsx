@@ -1,7 +1,13 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 function TodoSection({ title, count, onDropSection, emptyMessage, children }) {
   const [isDragOver, setIsDragOver] = useState(false);
+  const hasTodos = useMemo(() => {
+    if (Array.isArray(children)) {
+      return children.length > 0;
+    }
+    return Boolean(children);
+  }, [children]);
 
   const handleDragOver = (event) => {
     event.preventDefault();
@@ -45,7 +51,7 @@ function TodoSection({ title, count, onDropSection, emptyMessage, children }) {
         role="list"
         aria-live="polite"
       >
-        {children?.length ? (
+        {hasTodos ? (
           <ul className="todo-section__list">{children}</ul>
         ) : (
           <div className="todo-section__empty">{emptyMessage}</div>
