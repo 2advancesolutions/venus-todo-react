@@ -1,86 +1,87 @@
 import { useState, useCallback } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 
-const STORAGE_KEY = 'venus-todos';
+const STORAGE_KEY = 'venus_todos';
 
-const loadFromStorage = () => {
+function loadFromStorage() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : null;
+    return raw ? JSON.parse(raw) : [];
   } catch {
-    return null;
+    return [];
   }
-};
+}
 
-const saveToStorage = (todos) => {
+function save(todos) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
-  } catch {
-    /* ignore */
-  }
-};
+  } catch {}
+}
 
-const defaultTodos = [
-  { id: uuidv4(), text: 'Design a sleek UI 🎨', completed: false, createdAt: Date.now() - 7200000 },
-  { id: uuidv4(), text: 'Build drag & drop feature 🖱️', completed: false, createdAt: Date.now() - 3600000 },
-  { id: uuidv4(), text: 'Write unit tests ✅', completed: true, createdAt: Date.now() - 1800000 },
-];
+function uid() {
+  return `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+}
 
 export function useTodos() {
-  const [todos, setTodos] = useState(() => loadFromStorage() ?? defaultTodos);
+  const [todos, setTodos] = useState(loadFromStorage);
 
-  const persist = useCallback((updater) => {
-    setTodos((prev) => {
-      const next = typeof updater === 'function' ? updater(prev) : updater;
-      saveToStorage(next);
-      return next;
-    });
+  const persist = useCallback((next) => {
+    setTodos(next);
+    save(next);
   }, []);
 
+  // Returns true on success, false if invalid
   const addTodo = useCallback((text) => {
     const trimmed = text.trim();
     if (!trimmed) return false;
-    persist((prev) => [
-      { id: uuidv4(), text: trimmed, completed: false, createdAt: Date.now() },
-      ...prev,
-    ]);
+    const next = [
+      {
+        id: uid(),
+        text: trimmed,
+        completed: false,
+        createdAt: Date.now(),
+      },
+      ...todos,
+    ];
+    persist(next);
     return true;
-  }, [persist]);
+  }, [todos, persist]);
 
   const updateTodo = useCallback((id, text) => {
     const trimmed = text.trim();
     if (!trimmed) return false;
-    persist((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, text: trimmed } : t))
+    const next = todos.map((t) =>
+      t.id === id ? { ...t, text: trimmed } : t
     );
+    persist(next);
     return true;
-  }, [persist]);
+  }, [todos, persist]);
 
   const deleteTodo = useCallback((id) => {
-    persist((prev) => prev.filter((t) => t.id !== id));
-  }, [persist]);
+    persist(todos.filter((t) => t.id !== id));
+  }, [todos, persist]);
 
   const completeTodo = useCallback((id) => {
-    persist((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, completed: true } : t))
+    const next = todos.map((t) =>
+      t.id === id ? { ...t, completed: true, completedAt: Date.now() } : t
     );
-  }, [persist]);
+    persist(next);
+  }, [todos, persist]);
 
   const uncompleteTodo = useCallback((id) => {
-    persist((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, completed: false } : t))
+    const next = todos.map((t) =>
+      t.id === id ? { ...t, completed: false, completedAt: undefined } : t
     );
-  }, [persist]);
+    persist(next);
+  }, [todos, persist]);
 
   const clearCompleted = useCallback(() => {
-    persist((prev) => prev.filter((t) => !t.completed));
-  }, [persist]);
+    persist(todos.filter((t) => !t.completed));
+  }, [todos, persist]);
 
   const pending = todos.filter((t) => !t.completed);
   const completed = todos.filter((t) => t.completed);
 
   return {
-    todos,
     pending,
     completed,
     addTodo,

@@ -1,60 +1,62 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 
-export function useDragDrop({ onDrop }) {
+export function useDragDrop(onComplete) {
   const [draggingId, setDraggingId] = useState(null);
-  const [dropTargetActive, setDropTargetActive] = useState(false);
-  const dragCounter = useRef(0);
+  const [dropActive, setDropActive] = useState(false);
+  const dragEnterCount = useRef(0); // counter to handle bubbling
 
   const handleDragStart = useCallback((e, id) => {
     setDraggingId(id);
     e.dataTransfer.effectAllowed = 'move';
+    // Store id in transfer — fallback for cross-browser
     e.dataTransfer.setData('text/plain', id);
-    // slight delay so the ghost image renders before opacity change
-    requestAnimationFrame(() => {
-      e.target.style.opacity = '0.4';
-    });
   }, []);
 
-  const handleDragEnd = useCallback((e) => {
-    e.target.style.opacity = '1';
+  const handleDragEnd = useCallback(() => {
     setDraggingId(null);
-    setDropTargetActive(false);
-    dragCounter.current = 0;
+    setDropActive(false);
+    dragEnterCount.current = 0;
   }, []);
 
-  const handleDropZoneDragEnter = useCallback((e) => {
+  const handleDragEnter = useCallback((e) => {
     e.preventDefault();
-    dragCounter.current += 1;
-    setDropTargetActive(true);
+    dragEnterCount.current += 1;
+    setDropActive(true);
   }, []);
 
-  const handleDropZoneDragLeave = useCallback(() => {
-    dragCounter.current -= 1;
-    if (dragCounter.current === 0) setDropTargetActive(false);
+  const handleDragLeave = useCallback(() => {
+    dragEnterCount.current -= 1;
+    if (dragEnterCount.current <= 0) {
+      dragEnterCount.current = 0;
+      setDropActive(false);
+    }
   }, []);
 
-  const handleDropZoneDragOver = useCallback((e) => {
+  const handleDragOver = useCallback((e) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = 'move';
   }, []);
 
-  const handleDropZoneDrop = useCallback((e) => {
+  const handleDrop = useCallback((e) => {
     e.preventDefault();
-    const id = e.dataTransfer.getData('text/plain');
-    dragCounter.current = 0;
-    setDropTargetActive(false);
+    const id = draggingId || e.dataTransfer.getData('text/plain');
+    if (id) {
+      onComplete(id);
+    }
     setDraggingId(null);
-    if (id) onDrop(id);
-  }, [onDrop]);
+    setDropActive(false);
+    dragEnterCount.current = 0;
+  }, [draggingId, onComplete]);
 
   return {
     draggingId,
-    dropTargetActive,
+    isDragging: draggingId !== null,
+    dropActive,
     handleDragStart,
     handleDragEnd,
-    handleDropZoneDragEnter,
-    handleDropZoneDragLeave,
-    handleDropZoneDragOver,
-    handleDropZoneDrop,
+    handleDragEnter,
+    handleDragLeave,
+    handleDragOver,
+    handleDrop,
   };
 }
