@@ -32,7 +32,6 @@ const createSeedData = () => ({
 function App() {
   const [columns, setColumns] = useState(createSeedData);
   const [newTaskTitle, setNewTaskTitle] = useState('');
-  const [draggedTaskId, setDraggedTaskId] = useState(null);
   const [activeDropColumn, setActiveDropColumn] = useState(null);
 
   const columnConfig = useMemo(
@@ -84,14 +83,12 @@ function App() {
   };
 
   const handleDragStart = (event, taskId, columnId, format) => {
-    setDraggedTaskId(taskId);
     const payload = JSON.stringify({ taskId, from: columnId });
     event.dataTransfer.setData(format, payload);
     event.dataTransfer.effectAllowed = 'move';
   };
 
   const handleDragEnd = () => {
-    setDraggedTaskId(null);
     setActiveDropColumn(null);
   };
 
@@ -112,7 +109,6 @@ function App() {
 
     const { taskId, from } = JSON.parse(data);
     setActiveDropColumn(null);
-    setDraggedTaskId(null);
 
     setColumns((prev) => {
       if (from === destinationColumn) {
@@ -148,8 +144,7 @@ function App() {
             </p>
             <h1 className="text-3xl font-semibold text-slate-100 sm:text-4xl">
               Action Board
-            </h1
-            >
+            </h1>
           </div>
           <div className="flex items-center gap-2 rounded-full bg-slate-900/80 px-4 py-2 text-sm text-slate-300">
             <span className="h-2 w-2 rounded-full bg-emerald-400" aria-hidden="true"></span>
