@@ -1,76 +1,46 @@
-import React from 'react';
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
-import { TodoForm } from './components/TodoForm';
-import { TodoList } from './components/TodoList';
-import { useTodos } from './hooks/useTodos';
+import { useState } from 'react';
+import TodoList from './components/TodoList';
+import TodoForm from './components/TodoForm';
+import { Todo } from './types/todo';
 
 function App() {
-  const { todos, addTodo, updateTodo, deleteTodo, toggleTodo } = useTodos();
+  const [todos, setTodos] = useState<Todo[]>([]);
 
-  const activeTodos = todos.filter(todo => !todo.completed);
-  const completedTodos = todos.filter(todo => todo.completed);
-
-  const handleUpdateTodo = (id: string, title: string, description?: string) => {
-    updateTodo(id, { title, description });
+  const addTodo = (text: string) => {
+    const newTodo: Todo = {
+      id: Date.now().toString(),
+      text,
+      completed: false,
+      createdAt: new Date(),
+    };
+    setTodos([...todos, newTodo]);
   };
 
-  const handleDrop = (id: string, completed: boolean) => {
-    const todo = todos.find(t => t.id === id);
-    if (todo && todo.completed !== completed) {
-      toggleTodo(id);
-    }
+  const toggleTodo = (id: string) => {
+    setTodos(todos.map(todo =>
+      todo.id === id ? { ...todo, completed: !todo.completed } : todo
+    ));
+  };
+
+  const deleteTodo = (id: string) => {
+    setTodos(todos.filter(todo => todo.id !== id));
   };
 
   return (
-    <DndProvider backend={HTML5Backend}>
-      <div className="min-h-screen py-8 px-4">
-        <div className="max-w-6xl mx-auto">
-          <header className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-slate-800 mb-2">
-              Venus Todo
-            </h1>
-            <p className="text-slate-600">
-              Modern drag & drop todo management
-            </p>
-          </header>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Left Panel - Add Todo */}
-            <div className="lg:col-span-1">
-              <TodoForm onAddTodo={addTodo} />
-            </div>
-
-            {/* Right Panels - Todo Lists */}
-            <div className="lg:col-span-2">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <TodoList
-                  title="Active Todos"
-                  todos={activeTodos}
-                  onToggle={toggleTodo}
-                  onDelete={deleteTodo}
-                  onUpdate={handleUpdateTodo}
-                  onDrop={handleDrop}
-                  completedFilter={false}
-                  accentColor="indigo"
-                />
-                
-                <TodoList
-                  title="Completed Todos"
-                  todos={completedTodos}
-                  onToggle={toggleTodo}
-                  onDelete={deleteTodo}
-                  onUpdate={handleUpdateTodo}
-                  onDrop={handleDrop}
-                  completedFilter={true}
-                  accentColor="green"
-                />
-              </div>
-            </div>
-          </div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
+      <div className="max-w-2xl mx-auto">
+        <h1 className="text-4xl font-bold text-gray-800 mb-8 text-center">
+          Venus Todo App
+        </h1>
+        <div className="bg-white rounded-xl shadow-lg p-6">
+          <TodoForm onAdd={addTodo} />
+          <TodoList todos={todos} onToggle={toggleTodo} onDelete={deleteTodo} />
+          {todos.length === 0 && (
+            <p className="text-center text-gray-400 py-8">No todos yet. Add one above!</p>
+          )}
         </div>
       </div>
-    </DndProvider>
+    </div>
   );
 }
 
