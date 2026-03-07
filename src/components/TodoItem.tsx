@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Todo } from '../types/todo';
 
 interface TodoItemProps {
@@ -10,26 +10,29 @@ interface TodoItemProps {
 
 export default function TodoItem({ todo, onToggle, onDelete, onUpdate }: TodoItemProps) {
   const [isEditing, setIsEditing] = useState(false);
-  const [editText, setEditText] = useState(todo.text);
+  const [draftText, setDraftText] = useState(todo.text);
+
+  useEffect(() => {
+    setDraftText(todo.text);
+  }, [todo.text]);
 
   const handleSave = () => {
-    if (editText.trim()) {
-      onUpdate(todo.id, editText.trim());
+    const trimmed = draftText.trim();
+    if (!trimmed) {
+      setDraftText(todo.text);
       setIsEditing(false);
+      return;
     }
-  };
 
-  const handleCancel = () => {
-    setEditText(todo.text);
+    if (trimmed !== todo.text) {
+      onUpdate(todo.id, trimmed);
+    }
     setIsEditing(false);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handleSave();
-    } else if (e.key === 'Escape') {
-      handleCancel();
-    }
+  const handleCancel = () => {
+    setDraftText(todo.text);
+    setIsEditing(false);
   };
 
   return (
@@ -40,37 +43,41 @@ export default function TodoItem({ todo, onToggle, onDelete, onUpdate }: TodoIte
         onChange={() => onToggle(todo.id)}
         className="w-5 h-5 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
       />
-      
       {isEditing ? (
-        <div className="flex-1 flex gap-2">
-          <input
-            type="text"
-            value={editText}
-            onChange={(e) => setEditText(e.target.value)}
-            onKeyDown={handleKeyDown}
-            className="flex-1 px-3 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-            autoFocus
-          />
+        <input
+          value={draftText}
+          onChange={(e) => setDraftText(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') handleSave();
+            if (e.key === 'Escape') handleCancel();
+          }}
+          autoFocus
+          className="flex-1 px-3 py-2 border border-blue-200 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      ) : (
+        <span
+          className={`flex-1 ${todo.completed ? 'line-through text-gray-400' : 'text-gray-800'}`}
+        >
+          {todo.text}
+        </span>
+      )}
+      {isEditing ? (
+        <div className="flex items-center gap-2">
           <button
             onClick={handleSave}
-            className="px-3 py-1 text-sm bg-green-600 text-white rounded hover:bg-green-700 transition-colors"
+            className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
           >
             Save
           </button>
           <button
             onClick={handleCancel}
-            className="px-3 py-1 text-sm bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors"
+            className="px-3 py-1 text-sm text-gray-600 hover:bg-gray-100 rounded transition-colors"
           >
             Cancel
           </button>
         </div>
       ) : (
-        <>
-          <span 
-            className={`flex-1 ${todo.completed ? 'line-through text-gray-400' : 'text-gray-800'}`}
-          >
-            {todo.text}
-          </span>
+        <div className="flex items-center gap-2">
           <button
             onClick={() => setIsEditing(true)}
             className="px-3 py-1 text-sm text-blue-600 hover:bg-blue-50 rounded transition-colors"
@@ -83,7 +90,7 @@ export default function TodoItem({ todo, onToggle, onDelete, onUpdate }: TodoIte
           >
             Delete
           </button>
-        </>
+        </div>
       )}
     </div>
   );
