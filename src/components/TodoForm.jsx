@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 function TodoForm({ onAddTodo }) {
   const [inputText, setInputText] = useState('')
 
-  const handleSubmit = (e) {
+  const handleSubmit = (e) => {
     e.preventDefault()
     if (inputText.trim()) {
       onAddTodo(inputText.trim())
