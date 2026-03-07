@@ -4,8 +4,13 @@ import './App.css'
 const STORAGE_KEY = 'venus_todo_items'
 
 function createTodo(label) {
+  const randomId =
+    typeof globalThis.crypto !== 'undefined' && typeof globalThis.crypto.randomUUID === 'function'
+      ? globalThis.crypto.randomUUID()
+      : `${Date.now()}-${Math.random().toString(16).slice(2)}`
+
   return {
-    id: crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`,
+    id: randomId,
     label,
     completed: false,
     createdAt: new Date().toISOString(),
@@ -14,8 +19,10 @@ function createTodo(label) {
 
 function App() {
   const [todos, setTodos] = useState(() => {
+    if (typeof window === 'undefined') return []
+
     try {
-      const stored = localStorage.getItem(STORAGE_KEY)
+      const stored = window.localStorage.getItem(STORAGE_KEY)
       return stored ? JSON.parse(stored) : []
     } catch (error) {
       console.warn('Failed to load todos from storage', error)
@@ -28,7 +35,8 @@ function App() {
   const [filter, setFilter] = useState('all')
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(todos))
+    if (typeof window === 'undefined') return
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(todos))
   }, [todos])
 
   const visibleTodos = useMemo(() => {
@@ -189,7 +197,11 @@ function App() {
                       type="checkbox"
                       checked={todo.completed}
                       onChange={() => toggleTodo(todo.id)}
-                      aria-label={todo.completed ? `Mark ${todo.label} as incomplete` : `Mark ${todo.label} as complete`}
+                      aria-label={
+                        todo.completed
+                          ? `Mark ${todo.label} as incomplete`
+                          : `Mark ${todo.label} as complete`
+                      }
                     />
 
                     {editingId === todo.id ? (
