@@ -13,26 +13,27 @@ function App() {
       completed: false,
       createdAt: new Date(),
     };
-    setTodos((prevTodos) => [...prevTodos, newTodo]);
-  };
-
-  const updateTodo = (id: string, newText: string) => {
-    setTodos((prevTodos) =>
-      prevTodos.map((todo) => (todo.id === id ? { ...todo, text: newText } : todo))
-    );
+    setTodos([...todos, newTodo]);
   };
 
   const toggleTodo = (id: string) => {
-    setTodos((prevTodos) =>
-      prevTodos.map((todo) =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo
-      )
-    );
+    setTodos(todos.map(todo =>
+      todo.id === id ? { ...todo, completed: !todo.completed } : todo
+    ));
   };
 
   const deleteTodo = (id: string) => {
-    setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
+    setTodos(todos.filter(todo => todo.id !== id));
   };
+
+  const updateTodo = (id: string, text: string) => {
+    setTodos(todos.map(todo =>
+      todo.id === id ? { ...todo, text } : todo
+    ));
+  };
+
+  const completedCount = todos.filter(todo => todo.completed).length;
+  const totalCount = todos.length;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
@@ -40,18 +41,27 @@ function App() {
         <h1 className="text-4xl font-bold text-gray-800 mb-8 text-center">
           Venus Todo App
         </h1>
-        <div className="bg-white rounded-xl shadow-lg p-6">
+        
+        <div className="bg-white rounded-xl shadow-lg p-6 mb-4">
           <TodoForm onAdd={addTodo} />
-          <TodoList
-            todos={todos}
-            onToggle={toggleTodo}
-            onDelete={deleteTodo}
-            onUpdate={updateTodo}
-          />
-          {todos.length === 0 && (
-            <p className="text-center text-gray-400 py-8">No todos yet. Add one above!</p>
-          )}
         </div>
+
+        {todos.length > 0 && (
+          <div className="bg-white rounded-xl shadow-lg p-6">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-lg font-semibold text-gray-700">Your Todos</h2>
+              <span className="text-sm text-gray-500">
+                {completedCount} / {totalCount} completed
+              </span>
+            </div>
+            <TodoList 
+              todos={todos} 
+              onToggle={toggleTodo} 
+              onDelete={deleteTodo}
+              onUpdate={updateTodo}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
