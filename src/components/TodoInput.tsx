@@ -1,37 +1,31 @@
-import { useState, FormEvent } from 'react'
+import { useState } from 'react';
 
 interface TodoInputProps {
-  onAddTodo: (text: string) => void
+  onAdd: (text: string) => void;
+  placeholder?: string;
 }
 
-export default function TodoInput({ onAddTodo }: TodoInputProps) {
-  const [input, setInput] = useState('')
+export function TodoInput({ onAdd, placeholder = "Add a new todo..." }: TodoInputProps) {
+  const [text, setText] = useState('');
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault()
-    if (input.trim()) {
-      onAddTodo(input.trim())
-      setInput('')
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (text.trim()) {
+      onAdd(text.trim());
+      setText('');
     }
-  }
+  };
 
   return (
-    <form onSubmit={handleSubmit} className="mb-6">
-      <div className="flex gap-2">
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Add a new task..."
-          className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-        />
-        <button
-          type="submit"
-          className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
-        >
-          Add
-        </button>
-      </div>
+    <form onSubmit={handleSubmit} className="w-full">
+      <input
+        type="text"
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        placeholder={placeholder}
+        className="w-full px-4 py-3 text-lg border-2 border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 transition-colors"
+        autoFocus
+      />
     </form>
-  )
+  );
 }
