@@ -1,8 +1,11 @@
 import { useState } from 'react'
-import TodoList from './components/TodoList'
-import TodoForm from './components/TodoForm'
 import { Todo } from './types/Todo'
+import TodoForm from './components/TodoForm'
+import TodoList from './components/TodoList'
 import './App.css'
+import './components/TodoForm.css'
+import './components/TodoList.css'
+import './components/TodoItem.css'
 
 function App() {
   const [todos, setTodos] = useState<Todo[]>([])
@@ -35,10 +38,10 @@ function App() {
 
   return (
     <div className="app">
-      <h1>Venus Todo App</h1>
+      <h1>React Todo App</h1>
       <TodoForm onAddTodo={addTodo} />
-      <TodoList 
-        todos={todos} 
+      <TodoList
+        todos={todos}
         onDeleteTodo={deleteTodo}
         onUpdateTodo={updateTodo}
         onToggleTodo={toggleTodo}
