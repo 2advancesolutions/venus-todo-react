@@ -1,56 +1,72 @@
-import { useState } from 'react';
-import TodoList from './components/TodoList';
-import TodoForm from './components/TodoForm';
+import { useState, useEffect } from 'react';
 import { Todo } from './types/todo';
+import { TodoForm } from './components/TodoForm';
 
 function App() {
-  const [todos, setTodos] = useState<Todo[]>([]);
+  const [todos, setTodos] = useState<Todo[]>(() => {
+    const saved = localStorage.getItem('todos');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        return parsed.map((todo: any) => ({
+          ...todo,
+          createdAt: new Date(todo.createdAt)
+        }));
+      } catch {
+        return [];
+      }
+    }
+    return [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('todos', JSON.stringify(todos));
+  }, [todos]);
 
   const addTodo = (text: string) => {
     const newTodo: Todo = {
-      id: Date.now().toString(),
+      id: crypto.randomUUID(),
       text,
       completed: false,
-      createdAt: new Date(),
+      createdAt: new Date()
     };
-    setTodos([...todos, newTodo]);
+    setTodos(prev => [...prev, newTodo]);
   };
 
   const toggleTodo = (id: string) => {
-    setTodos(todos.map(todo =>
-      todo.id === id ? { ...todo, completed: !todo.completed } : todo
-    ));
+    setTodos(prev => 
+      prev.map(todo => 
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+      )
+    );
   };
 
   const deleteTodo = (id: string) => {
-    setTodos(todos.filter(todo => todo.id !== id));
+    setTodos(prev => prev.filter(todo => todo.id !== id));
   };
 
-  const editTodo = (id: string, newText: string) => {
-    setTodos(todos.map(todo =>
-      todo.id === id ? { ...todo, text: newText } : todo
-    ));
+  const editTodo = (id: string, text: string) => {
+    setTodos(prev => 
+      prev.map(todo => 
+        todo.id === id ? { ...todo, text } : todo
+      )
+    );
+  };
+
+  const clearCompleted = () => {
+    setTodos(prev => prev.filter(todo => !todo.completed));
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
-      <div className="max-w-2xl mx-auto">
-        <h1 className="text-4xl font-bold text-gray-800 mb-8 text-center">
-          Venus Todo App
-        </h1>
-        <div className="bg-white rounded-xl shadow-lg p-6">
-          <TodoForm onAdd={addTodo} />
-          <TodoList 
-            todos={todos} 
-            onToggle={toggleTodo} 
-            onDelete={deleteTodo}
-            onEdit={editTodo}
-          />
-          {todos.length === 0 && (
-            <p className="text-center text-gray-400 py-8">No todos yet. Add one above!</p>
-          )}
-        </div>
-      </div>
+    <div className="min-h-screen bg-gray-50 py-8 px-4">
+      <TodoForm
+        todos={todos}
+        onAdd={addTodo}
+        onToggle={toggleTodo}
+        onDelete={deleteTodo}
+        onEdit={editTodo}
+        onClearCompleted={clearCompleted}
+      />
     </div>
   );
 }
