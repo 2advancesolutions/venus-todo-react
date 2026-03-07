@@ -13,17 +13,25 @@ function App() {
       completed: false,
       createdAt: new Date(),
     };
-    setTodos([...todos, newTodo]);
+    setTodos((prevTodos) => [...prevTodos, newTodo]);
+  };
+
+  const updateTodo = (id: string, newText: string) => {
+    setTodos((prevTodos) =>
+      prevTodos.map((todo) => (todo.id === id ? { ...todo, text: newText } : todo))
+    );
   };
 
   const toggleTodo = (id: string) => {
-    setTodos(todos.map(todo =>
-      todo.id === id ? { ...todo, completed: !todo.completed } : todo
-    ));
+    setTodos((prevTodos) =>
+      prevTodos.map((todo) =>
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+      )
+    );
   };
 
   const deleteTodo = (id: string) => {
-    setTodos(todos.filter(todo => todo.id !== id));
+    setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
   };
 
   return (
@@ -34,7 +42,12 @@ function App() {
         </h1>
         <div className="bg-white rounded-xl shadow-lg p-6">
           <TodoForm onAdd={addTodo} />
-          <TodoList todos={todos} onToggle={toggleTodo} onDelete={deleteTodo} />
+          <TodoList
+            todos={todos}
+            onToggle={toggleTodo}
+            onDelete={deleteTodo}
+            onUpdate={updateTodo}
+          />
           {todos.length === 0 && (
             <p className="text-center text-gray-400 py-8">No todos yet. Add one above!</p>
           )}
