@@ -26,6 +26,12 @@ function App() {
     setTodos(todos.filter(todo => todo.id !== id));
   };
 
+  const updateTodo = (id: string, text: string) => {
+    setTodos(todos.map(todo =>
+      todo.id === id ? { ...todo, text } : todo
+    ));
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
       <div className="max-w-2xl mx-auto">
@@ -34,7 +40,12 @@ function App() {
         </h1>
         <div className="bg-white rounded-xl shadow-lg p-6">
           <TodoForm onAdd={addTodo} />
-          <TodoList todos={todos} onToggle={toggleTodo} onDelete={deleteTodo} />
+          <TodoList 
+            todos={todos} 
+            onToggle={toggleTodo} 
+            onDelete={deleteTodo} 
+            onUpdate={updateTodo}
+          />
           {todos.length === 0 && (
             <p className="text-center text-gray-400 py-8">No todos yet. Add one above!</p>
           )}
