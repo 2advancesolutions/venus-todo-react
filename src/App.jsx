@@ -2,12 +2,6 @@ import { useEffect, useMemo, useState } from 'react';
 
 const LOCAL_STORAGE_KEY = 'venus-todo-items';
 
-const createEmptyTodo = () => ({
-  id: crypto.randomUUID(),
-  text: '',
-  completed: false,
-});
-
 function App() {
   const [todos, setTodos] = useState(() => {
     try {
