@@ -5,12 +5,20 @@ interface TodoListProps {
   todos: Todo[];
   onToggle: (id: string) => void;
   onDelete: (id: string) => void;
-  onUpdate: (id: string, newText: string) => void;
+  onUpdate: (id: string, text: string) => void;
 }
 
-export default function TodoList({ todos, onToggle, onDelete, onUpdate }: TodoListProps) {
+function TodoList({ todos, onToggle, onDelete, onUpdate }: TodoListProps) {
+  if (todos.length === 0) {
+    return (
+      <div className="text-center text-gray-400 py-8">
+        No todos yet. Add one above!
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-2">
+    <ul className="space-y-2">
       {todos.map((todo) => (
         <TodoItem
           key={todo.id}
@@ -20,6 +28,8 @@ export default function TodoList({ todos, onToggle, onDelete, onUpdate }: TodoLi
           onUpdate={onUpdate}
         />
       ))}
-    </div>
+    </ul>
   );
 }
+
+export default TodoList;
