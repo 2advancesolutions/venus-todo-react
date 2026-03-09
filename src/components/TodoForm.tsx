@@ -1,49 +1,59 @@
-import { FormEvent, useId, useState } from 'react';
+import { useState } from 'react'
+import { TodoInput } from './TodoInput'
+import { TodoList } from './TodoList'
+import { Todo } from '../types/todo'
 
-interface TodoFormProps {
-  onAdd: (text: string) => void;
-}
+export function TodoForm() {
+  const [todos, setTodos] = useState<Todo[]>([])
 
-export default function TodoForm({ onAdd }: TodoFormProps) {
-  const [text, setText] = useState('');
-  const inputId = useId();
-
-  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const trimmed = text.trim();
-
-    if (!trimmed) {
-      return;
+  const addTodo = (text: string) => {
+    const newTodo: Todo = {
+      id: crypto.randomUUID(),
+      text,
+      completed: false,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     }
+    setTodos(prev => [newTodo, ...prev])
+  }
 
-    onAdd(trimmed);
-    setText('');
-  };
+  const toggleTodo = (id: string) => {
+    setTodos(prev =>
+      prev.map(todo =>
+        todo.id === id
+          ? { ...todo, completed: !todo.completed, updatedAt: new Date() }
+          : todo
+      )
+    )
+  }
 
-  const isDisabled = text.trim().length === 0;
+  const editTodo = (id: string, text: string) => {
+    setTodos(prev =>
+      prev.map(todo =>
+        todo.id === id ? { ...todo, text, updatedAt: new Date() } : todo
+      )
+    )
+  }
+
+  const deleteTodo = (id: string) => {
+    setTodos(prev => prev.filter(todo => todo.id !== id))
+  }
 
   return (
-    <form onSubmit={handleSubmit} className="mb-6">
-      <label htmlFor={inputId} className="sr-only">
-        Add a new todo
-      </label>
-      <div className="flex gap-2">
-        <input
-          id={inputId}
-          type="text"
-          value={text}
-          onChange={(event) => setText(event.target.value)}
-          placeholder="Add a new todo..."
-          className="flex-1 rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
-        />
-        <button
-          type="submit"
-          disabled={isDisabled}
-          className="rounded-lg bg-blue-600 px-6 py-2 font-semibold text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
-        >
-          Add
-        </button>
+    <div className="max-w-2xl mx-auto space-y-6">
+      <div className="bg-white rounded-lg shadow-lg p-6">
+        <h1 className="text-2xl font-bold text-gray-900 mb-4">My Todos</h1>
+        <TodoInput onAdd={addTodo} />
       </div>
-    </form>
-  );
+      
+      <div className="bg-white rounded-lg shadow-lg p-6">
+        <TodoList
+          todos={todos}
+          onToggle={toggleTodo}
+          onEdit={editTodo}
+          onDelete={deleteTodo}
+        />
+      </div>
+    </div>
+  )
 }
