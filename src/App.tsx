@@ -1,14 +1,16 @@
-import { useState } from 'react';
-import TodoList from './components/TodoList';
-import TodoForm from './components/TodoForm';
-import { Todo } from './types/todo';
+import { useState, useMemo } from 'react';
+import { Todo, TodoFilter } from './types/todo';
+import { TodoInput } from './components/TodoInput';
+import { TodoList } from './components/TodoList';
+import { TodoForm } from './components/TodoForm';
 
 function App() {
   const [todos, setTodos] = useState<Todo[]>([]);
+  const [filter, setFilter] = useState<TodoFilter>('all');
 
   const addTodo = (text: string) => {
     const newTodo: Todo = {
-      id: Date.now().toString(),
+      id: crypto.randomUUID(),
       text,
       completed: false,
       createdAt: new Date(),
@@ -16,8 +18,14 @@ function App() {
     setTodos([...todos, newTodo]);
   };
 
+  const updateTodo = (id: string, text: string) => {
+    setTodos(todos.map(todo => 
+      todo.id === id ? { ...todo, text } : todo
+    ));
+  };
+
   const toggleTodo = (id: string) => {
-    setTodos(todos.map(todo =>
+    setTodos(todos.map(todo => 
       todo.id === id ? { ...todo, completed: !todo.completed } : todo
     ));
   };
@@ -26,17 +34,56 @@ function App() {
     setTodos(todos.filter(todo => todo.id !== id));
   };
 
+  const clearCompleted = () => {
+    setTodos(todos.filter(todo => !todo.completed));
+  };
+
+  const filteredTodos = useMemo(() => {
+    switch (filter) {
+      case 'active':
+        return todos.filter(todo => !todo.completed);
+      case 'completed':
+        return todos.filter(todo => todo.completed);
+      default:
+        return todos;
+    }
+  }, [todos, filter]);
+
+  const activeCount = useMemo(() => 
+    todos.filter(todo => !todo.completed).length,
+    [todos]
+  );
+
+  const completedCount = useMemo(() => 
+    todos.filter(todo => todo.completed).length,
+    [todos]
+  );
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
-      <div className="max-w-2xl mx-auto">
-        <h1 className="text-4xl font-bold text-gray-800 mb-8 text-center">
-          Venus Todo App
+    <div className="min-h-screen bg-gray-100 py-8">
+      <div className="max-w-2xl mx-auto px-4">
+        <h1 className="text-4xl font-bold text-center text-gray-800 mb-8">
+          Todo App
         </h1>
-        <div className="bg-white rounded-xl shadow-lg p-6">
-          <TodoForm onAdd={addTodo} />
-          <TodoList todos={todos} onToggle={toggleTodo} onDelete={deleteTodo} />
-          {todos.length === 0 && (
-            <p className="text-center text-gray-400 py-8">No todos yet. Add one above!</p>
+        
+        <div className="bg-white rounded-lg shadow-lg p-6">
+          <TodoInput onAddTodo={addTodo} />
+          
+          <TodoList
+            todos={filteredTodos}
+            onUpdateTodo={updateTodo}
+            onToggleTodo={toggleTodo}
+            onDeleteTodo={deleteTodo}
+          />
+          
+          {todos.length > 0 && (
+            <TodoForm
+              filter={filter}
+              onFilterChange={setFilter}
+              onClearCompleted={clearCompleted}
+              activeCount={activeCount}
+              completedCount={completedCount}
+            />
           )}
         </div>
       </div>

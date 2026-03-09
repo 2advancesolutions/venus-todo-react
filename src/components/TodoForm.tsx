@@ -1,50 +1,56 @@
-import { TodoFilter } from '../types/todo';
+import { FormEvent, useId, useState } from 'react';
 
 interface TodoFormProps {
-  filter: TodoFilter;
-  onFilterChange: (filter: TodoFilter) => void;
-  onClearCompleted: () => void;
-  activeCount: number;
-  completedCount: number;
+  onAdd: (text: string) => void;
 }
 
-export function TodoForm({ filter, onFilterChange, onClearCompleted, activeCount, completedCount }: TodoFormProps) {
-  const filters: { value: TodoFilter; label: string }[] = [
-    { value: 'all', label: 'All' },
-    { value: 'active', label: 'Active' },
-    { value: 'completed', label: 'Completed' },
-  ];
+export default function TodoForm({ onAdd }: TodoFormProps) {
+  const [text, setText] = useState('');
+  const inputId = useId();
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const trimmed = text.trim();
+
+    if (!trimmed) {
+      return;
+    }
+
+    onAdd(trimmed);
+    setText('');
+  };
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setText(event.target.value);
+  };
+
+  const isDisabled = text.trim().length === 0;
 
   return (
-    <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200">
-      <span className="text-sm text-gray-600">
-        {activeCount} {activeCount === 1 ? 'item' : 'items'} left
-      </span>
-      
-      <div className="flex gap-2">
-        {filters.map(({ value, label }) => (
-          <button
-            key={value}
-            onClick={() => onFilterChange(value)}
-            className={`px-3 py-1 text-sm rounded transition-colors ${
-              filter === value
-                ? 'bg-blue-500 text-white'
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-            }`}
-          >
-            {label}
-          </button>
-        ))}
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm md:flex-row md:items-center"
+    >
+      <div className="w-full flex-1">
+        <label htmlFor={inputId} className="sr-only">
+          Add a todo item
+        </label>
+        <input
+          id={inputId}
+          type="text"
+          value={text}
+          onChange={handleChange}
+          placeholder="What do you need to get done?"
+          className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-base text-slate-700 shadow-inner focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-300"
+        />
       </div>
-
-      {completedCount > 0 && (
-        <button
-          onClick={onClearCompleted}
-          className="text-sm text-red-600 hover:text-red-800 transition-colors"
-        >
-          Clear completed
-        </button>
-      )}
-    </div>
+      <button
+        type="submit"
+        disabled={isDisabled}
+        className="inline-flex items-center justify-center rounded-xl bg-indigo-500 px-6 py-3 text-sm font-semibold text-white shadow hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-300 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-500"
+      >
+        Add Task
+      </button>
+    </form>
   );
 }
