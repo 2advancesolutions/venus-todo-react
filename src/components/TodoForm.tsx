@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { FormEvent, useId, useState } from 'react';
 
 interface TodoFormProps {
   onAdd: (text: string) => void;
@@ -6,30 +6,44 @@ interface TodoFormProps {
 
 export default function TodoForm({ onAdd }: TodoFormProps) {
   const [text, setText] = useState('');
+  const inputId = useId();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (text.trim()) {
-      onAdd(text.trim());
-      setText('');
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const trimmed = text.trim();
+
+    if (!trimmed) {
+      return;
     }
+
+    onAdd(trimmed);
+    setText('');
   };
 
+  const isDisabled = text.trim().length === 0;
+
   return (
-    <form onSubmit={handleSubmit} className="flex gap-2 mb-6">
-      <input
-        type="text"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        placeholder="Add a new todo..."
-        className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
-      <button
-        type="submit"
-        className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-      >
-        Add
-      </button>
+    <form onSubmit={handleSubmit} className="mb-6">
+      <label htmlFor={inputId} className="sr-only">
+        Add a new todo
+      </label>
+      <div className="flex gap-2">
+        <input
+          id={inputId}
+          type="text"
+          value={text}
+          onChange={(event) => setText(event.target.value)}
+          placeholder="Add a new todo..."
+          className="flex-1 rounded-lg border border-gray-300 px-4 py-2 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200"
+        />
+        <button
+          type="submit"
+          disabled={isDisabled}
+          className="rounded-lg bg-blue-600 px-6 py-2 font-semibold text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
+        >
+          Add
+        </button>
+      </div>
     </form>
   );
 }
