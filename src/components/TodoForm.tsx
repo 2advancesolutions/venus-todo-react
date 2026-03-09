@@ -1,35 +1,50 @@
-import { useState } from 'react';
+import { TodoFilter } from '../types/todo';
 
 interface TodoFormProps {
-  onAdd: (text: string) => void;
+  filter: TodoFilter;
+  onFilterChange: (filter: TodoFilter) => void;
+  onClearCompleted: () => void;
+  activeCount: number;
+  completedCount: number;
 }
 
-export default function TodoForm({ onAdd }: TodoFormProps) {
-  const [text, setText] = useState('');
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (text.trim()) {
-      onAdd(text.trim());
-      setText('');
-    }
-  };
+export function TodoForm({ filter, onFilterChange, onClearCompleted, activeCount, completedCount }: TodoFormProps) {
+  const filters: { value: TodoFilter; label: string }[] = [
+    { value: 'all', label: 'All' },
+    { value: 'active', label: 'Active' },
+    { value: 'completed', label: 'Completed' },
+  ];
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-2 mb-6">
-      <input
-        type="text"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        placeholder="Add a new todo..."
-        className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
-      <button
-        type="submit"
-        className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-      >
-        Add
-      </button>
-    </form>
+    <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg border border-gray-200">
+      <span className="text-sm text-gray-600">
+        {activeCount} {activeCount === 1 ? 'item' : 'items'} left
+      </span>
+      
+      <div className="flex gap-2">
+        {filters.map(({ value, label }) => (
+          <button
+            key={value}
+            onClick={() => onFilterChange(value)}
+            className={`px-3 py-1 text-sm rounded transition-colors ${
+              filter === value
+                ? 'bg-blue-500 text-white'
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            }`}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
+      {completedCount > 0 && (
+        <button
+          onClick={onClearCompleted}
+          className="text-sm text-red-600 hover:text-red-800 transition-colors"
+        >
+          Clear completed
+        </button>
+      )}
+    </div>
   );
 }
