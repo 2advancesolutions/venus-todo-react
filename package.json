@@ -8,12 +8,10 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "react": "19.0.0-rc",
-    "react-dom": "19.0.0-rc"
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "@types/react": "^18.3.11",
-    "@types/react-dom": "^18.3.5",
     "@vitejs/plugin-react": "^4.3.2",
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.41",
