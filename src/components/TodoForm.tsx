@@ -12,7 +12,6 @@ export function TodoForm() {
       text,
       completed: false,
       createdAt: new Date(),
-      updatedAt: new Date(),
     }
     setTodos(prev => [newTodo, ...prev])
   }
@@ -21,7 +20,7 @@ export function TodoForm() {
     setTodos(prev =>
       prev.map(todo =>
         todo.id === id
-          ? { ...todo, completed: !todo.completed, updatedAt: new Date() }
+          ? { ...todo, completed: !todo.completed }
           : todo
       )
     )
@@ -30,7 +29,7 @@ export function TodoForm() {
   const editTodo = (id: string, text: string) => {
     setTodos(prev =>
       prev.map(todo =>
-        todo.id === id ? { ...todo, text, updatedAt: new Date() } : todo
+        todo.id === id ? { ...todo, text } : todo
       )
     )
   }
