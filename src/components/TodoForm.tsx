@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
 
 interface TodoFormProps {
   onAdd: (text: string) => void;
@@ -7,28 +7,38 @@ interface TodoFormProps {
 export default function TodoForm({ onAdd }: TodoFormProps) {
   const [text, setText] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (text.trim()) {
-      onAdd(text.trim());
-      setText('');
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const trimmed = text.trim();
+
+    if (!trimmed) {
+      return;
     }
+
+    onAdd(trimmed);
+    setText('');
   };
 
+  const isDisabled = text.trim().length === 0;
+
   return (
-    <form onSubmit={handleSubmit} className="flex gap-2 mb-6">
+    <form onSubmit={handleSubmit} className="todo-form">
+      <label htmlFor="todo-input" className="visually-hidden">
+        Add a new todo
+      </label>
       <input
+        id="todo-input"
+        name="todo"
         type="text"
         value={text}
-        onChange={(e) => setText(e.target.value)}
-        placeholder="Add a new todo..."
-        className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        onChange={(event) => setText(event.target.value)}
+        placeholder="What would you like to get done?"
+        className="todo-input"
+        autoComplete="off"
+        aria-label="Todo description"
       />
-      <button
-        type="submit"
-        className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-      >
-        Add
+      <button type="submit" className="button button--primary" disabled={isDisabled}>
+        Add todo
       </button>
     </form>
   );
