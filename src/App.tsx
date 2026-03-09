@@ -1,4 +1,5 @@
-import { FormEvent, useMemo, useState } from 'react';
+import type { CSSProperties, FormEvent } from 'react';
+import { useMemo, useState } from 'react';
 
 type Todo = {
   id: string;
@@ -212,7 +213,7 @@ function App() {
   );
 }
 
-const styles: Record<string, React.CSSProperties> = {
+const styles: Record<string, CSSProperties> = {
   page: {
     minHeight: '100vh',
     padding: '3rem 1rem',
