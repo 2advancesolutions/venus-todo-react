@@ -1,103 +1,66 @@
-import { useMemo, useState } from 'react';
-import TodoForm from './components/TodoForm';
+import { useState } from 'react';
 import TodoList from './components/TodoList';
+import TodoForm from './components/TodoForm';
 import { Todo } from './types/todo';
-
-const createId = () => {
-  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
-    return crypto.randomUUID();
-  }
-
-  return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
-};
 
 function App() {
   const [todos, setTodos] = useState<Todo[]>([]);
 
-  const handleAddTodo = (text: string) => {
+  const addTodo = (text: string) => {
     const newTodo: Todo = {
-      id: createId(),
+      id: Date.now().toString(),
       text,
       completed: false,
       createdAt: new Date(),
-      updatedAt: null,
     };
-
-    setTodos((previous) => [...previous, newTodo]);
+    setTodos([...todos, newTodo]);
   };
 
-  const handleToggleTodo = (id: string) => {
-    setTodos((previous) =>
-      previous.map((todo) =>
-        todo.id === id
-          ? {
-              ...todo,
-              completed: !todo.completed,
-              updatedAt: new Date(),
-            }
-          : todo,
-      ),
-    );
+  const toggleTodo = (id: string) => {
+    setTodos(todos.map(todo =>
+      todo.id === id ? { ...todo, completed: !todo.completed } : todo
+    ));
   };
 
-  const handleDeleteTodo = (id: string) => {
-    setTodos((previous) => previous.filter((todo) => todo.id !== id));
+  const deleteTodo = (id: string) => {
+    setTodos(todos.filter(todo => todo.id !== id));
   };
 
-  const handleUpdateTodo = (id: string, nextText: string) => {
-    setTodos((previous) =>
-      previous.map((todo) =>
-        todo.id === id
-          ? {
-              ...todo,
-              text: nextText,
-              updatedAt: new Date(),
-            }
-          : todo,
-      ),
-    );
+  const updateTodo = (id: string, text: string) => {
+    setTodos(todos.map(todo =>
+      todo.id === id ? { ...todo, text } : todo
+    ));
   };
 
-  const stats = useMemo(() => {
-    const total = todos.length;
-    const completed = todos.filter((todo) => todo.completed).length;
-
-    return {
-      total,
-      completed,
-      remaining: total - completed,
-    };
-  }, [todos]);
+  const completedCount = todos.filter(todo => todo.completed).length;
+  const totalCount = todos.length;
 
   return (
-    <div className="app">
-      <header className="app__header">
-        <h1 className="app__title">Task Companion</h1>
-        <p className="app__subtitle">Capture your todos, update them, and stay on track.</p>
-      </header>
-
-      <main className="card">
-        <TodoForm onAdd={handleAddTodo} />
-
-        <div className="card__status" aria-live="polite">
-          <span className="card__status-item">Total: {stats.total}</span>
-          <span className="card__status-item">Completed: {stats.completed}</span>
-          <span className="card__status-item">Open: {stats.remaining}</span>
-        </div>
-
-        {todos.length === 0 ? (
-          <p className="empty-state" role="status">
-            You haven&apos;t added any todos yet. Create your first one above!
-          </p>
-        ) : (
-          <TodoList
-            todos={todos}
-            onToggle={handleToggleTodo}
-            onDelete={handleDeleteTodo}
-            onUpdate={handleUpdateTodo}
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
+      <div className="max-w-2xl mx-auto">
+        <h1 className="text-4xl font-bold text-gray-800 mb-2 text-center">
+          Venus Todo App
+        </h1>
+        <p className="text-center text-gray-600 mb-8">
+          {totalCount > 0 ? `${completedCount} of ${totalCount} completed` : 'Add your first todo!'}
+        </p>
+        
+        <div className="bg-white rounded-xl shadow-lg p-6">
+          <TodoForm onAdd={addTodo} />
+          <TodoList 
+            todos={todos} 
+            onToggle={toggleTodo} 
+            onDelete={deleteTodo}
+            onUpdate={updateTodo}
           />
-        )}
-      </main>
+          {todos.length === 0 && (
+            <div className="text-center py-8">
+              <div className="text-gray-400 text-lg mb-2">📝</div>
+              <p className="text-gray-400">No todos yet. Add one above!</p>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
