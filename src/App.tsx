@@ -26,17 +26,38 @@ function App() {
     setTodos(todos.filter(todo => todo.id !== id));
   };
 
+  const updateTodo = (id: string, text: string) => {
+    setTodos(todos.map(todo =>
+      todo.id === id ? { ...todo, text } : todo
+    ));
+  };
+
+  const completedCount = todos.filter(todo => todo.completed).length;
+  const totalCount = todos.length;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4">
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-4xl font-bold text-gray-800 mb-8 text-center">
+        <h1 className="text-4xl font-bold text-gray-800 mb-2 text-center">
           Venus Todo App
         </h1>
+        <p className="text-center text-gray-600 mb-8">
+          {totalCount > 0 ? `${completedCount} of ${totalCount} completed` : 'Add your first todo!'}
+        </p>
+        
         <div className="bg-white rounded-xl shadow-lg p-6">
           <TodoForm onAdd={addTodo} />
-          <TodoList todos={todos} onToggle={toggleTodo} onDelete={deleteTodo} />
+          <TodoList 
+            todos={todos} 
+            onToggle={toggleTodo} 
+            onDelete={deleteTodo}
+            onUpdate={updateTodo}
+          />
           {todos.length === 0 && (
-            <p className="text-center text-gray-400 py-8">No todos yet. Add one above!</p>
+            <div className="text-center py-8">
+              <div className="text-gray-400 text-lg mb-2">📝</div>
+              <p className="text-gray-400">No todos yet. Add one above!</p>
+            </div>
           )}
         </div>
       </div>
